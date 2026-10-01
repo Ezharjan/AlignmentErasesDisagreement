@@ -1,0 +1,585 @@
+{
+  "$schema": "./config.schema.json",
+  "site": {
+    "title": "When Alignment Erases Disagreement: Preference Collapse and a Four-Valued Alternative for LLMs",
+    "venue": "AAAI 2026 Fall Symposium Series",
+    "description": "A formal analysis of why scalar-reward alignment cannot represent irreducible value disagreement, and a four-valued, conflict-preserving alternative for large language models with a classical safety floor.",
+    "keywords": "AI alignment, pluralistic alignment, preference collapse, RLHF, DPO, Bradley–Terry model, Belnap–Dunn logic, paraconsistency, transferable belief model, Global South, Indigenous data governance, AI safety, AAAI 2026 Fall Symposium Series",
+    "favicon": "favicon.ico",
+    "lang": "en",
+    "url": "",
+    "publicationDate": "2026"
+  },
+  "authors": [
+    {
+      "name": "Aizierjiang Aiersilan",
+      "url": "https://ezharjan.github.io/",
+      "affiliations": [
+        1
+      ]
+    }
+  ],
+  "affiliations": [
+    {
+      "id": 1,
+      "name": "The George Washington University"
+    }
+  ],
+  "links": [
+    {
+      "type": "slides",
+      "label": "Slides",
+      "icon": "fas fa-chalkboard-teacher",
+      "url": "When_Alignment_Erases_Disagreement_AizierjiangAiersilan_slides4AAAI2026FSS.pdf",
+      "enabled": true
+    },
+    {
+      "type": "poster",
+      "label": "Poster",
+      "icon": "fas fa-file-image",
+      "url": "paper_poster.pdf",
+      "enabled": false
+    },
+    {
+      "type": "confab",
+      "label": "Confab",
+      "icon": "fas fa-calendar-check",
+      "url": "https://cal.com/ezhar/30min",
+      "enabled": true
+    },
+    {
+      "type": "arxiv",
+      "label": "arXiv",
+      "icon": "ai ai-arxiv",
+      "url": "https://arxiv.org/abs/REPLACE_ME",
+      "enabled": false
+    },
+    {
+      "type": "paper",
+      "label": "Paper",
+      "icon": "fas fa-file-alt",
+      "url": "https://aaai.org/conference/fall-symposia/2026-fall-symposium-series-2/",
+      "enabled": true
+    }
+  ],
+  "abstract": {
+    "title": "Abstract",
+    "body": "Alignment pipelines for large language models convert human judgments into a scalar reward and optimize a single policy against it. We argue that this conversion, not merely the demography of the annotator pool, makes contemporary alignment structurally insensitive to Global South, Indigenous, and other marginalized value frameworks. We present two results. First, under the Bradley–Terry model that underwrites RLHF and DPO, preference labels collected without annotator provenance from a deeply divided population and from a uniformly ambivalent one have identical distributions, so no estimator can distinguish a contested question from one about which users are indifferent. Second, the evaluation space that separates support, opposition, ignorance, and conflict is a three-dimensional simplex whose vertices are the four values of Belnap–Dunn logic; a scalar reward is the output of a map with two-dimensional fibers, which discards conflict entirely and folds ignorance evenly into support and opposition. Consensus-seeking elicitation does not repair the collapse; it removes contested items by construction. We therefore propose a four-valued architecture that returns admissible sets rather than maximizers, maintains a non-negotiable safety floor in the classical fragment while treating contested values paraconsistently, and exposes contestation to institutional governance instead of resolving it silently; we analyze its attack surface, use Sen’s liberal paradox as a diagnostic map of the design space, and propose conflict-preserving evaluation metrics."
+  },
+  "sections": [
+    {
+      "type": "group",
+      "title": "Aligning with Whom?",
+      "blocks": [
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "Every deployed alignment method answers the question <i>aligning with whom?</i>, whether or not it is explicitly deliberated: the answer is encoded in the estimator. RLHF fits a scalar reward to pairwise comparisons; DPO drops the explicit reward model but keeps the same Bradley–Terry likelihood; Constitutional AI replaces part of the human label stream with AI feedback conditioned on principles sampled from a written constitution. In each case, a distribution of human judgments is compressed into one scalar per candidate response, and one policy is optimized against it. The empirical consequences point in one direction."
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "align": "left",
+          "items": [
+            "Aligned models reproduce the opinions of respondents from the United States and some European and South American countries more closely than those of respondents elsewhere (Durmus et al., 2024).",
+            "Compared with the Integrated Values Surveys, which cover 107 countries and territories, five successive OpenAI models all expressed values resembling those of English-speaking and Protestant European countries (Tao et al., 2024).",
+            "Human-feedback tuning shifts a model’s expressed views toward respondents who are liberal, high-income, and well-educated (Santurkar et al., 2023).",
+            "The effect is due to alignment itself, not only to pretraining: alignment widens the performance gap between American English and Indian or Nigerian English from approximately 1% to 17.1%, and a widely used open reward model ranks 99.4% of other countries more negatively than the United States (Ryan et al., 2024).",
+            "Even when the relevant norms from 75 countries are supplied, the best model remains below 82% accuracy, whereas humans exceed 95% (Rao et al., 2025); on a red-teamed hard split, frontier accuracy ranges from 28.7% to 61.5%, compared with 92.4% for humans (Chiu et al., 2025)."
+          ]
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "The standard diagnosis is representational: the data lack demographic diversity. This is correct but incomplete. Even the most deliberately participatory preference dataset released to date, with 1,500 participants from 75 countries, remains skewed toward White, Western, and educated participants and includes only English speakers (Kirk et al., 2024). We argue that even if the sampling problem were solved, the erasure would persist, because the learned representation has no capacity to encode irreducible disagreement."
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "title": "Contributions",
+      "blocks": [
+        {
+          "type": "list",
+          "ordered": true,
+          "align": "left",
+          "items": [
+            "An <b>identifiability result</b>: when preference labels are collected without annotator provenance, a sharply divided population and a uniformly ambivalent one generate identically distributed data under the Bradley–Terry likelihood, so the distinction is not lost in aggregation but unidentifiable.",
+            "A <b>geometric account</b> of what a scalar reward discards: the space that separates support, opposition, ignorance, and conflict is a three-simplex whose vertices are the four Belnap–Dunn values, and the canonical scalarization has two-dimensional fibers.",
+            "An analysis showing that <b>consensus-seeking elicitation</b> tightens rather than loosens the filter, and an argument that the cost falls hardest on communities whose commitments are structurally contested rather than merely under-sampled.",
+            "A <b>four-valued architecture</b> with a non-negotiable safety floor, together with an analysis of its attack surface, Sen’s liberal paradox as a diagnostic map of the design space, conflict-preserving evaluation metrics, and explicit conditions under which the proposal would be confirmed or refuted."
+          ]
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "This work contributes to the pluralistic alignment agenda (Sorensen et al., 2024; Conitzer et al., 2024). It is most closely related to recent neutrosophic treatments of alignment under irreducible pluralism (Smarandache and Leyva-Vázquez, 2026; Leyva-Vázquez et al., 2026); we differ by locating the root failure in an identifiability result about preference data rather than in the choice of uncertainty calculus, and by requiring that a paraconsistent value layer sit on a classically maintained floor."
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "title": "Three Sites of Aggregation",
+      "blocks": [
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "Pluralism is lost at three sites in the pipeline."
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "align": "left",
+          "items": [
+            "<b>Elicitation.</b> Preference datasets typically record one binary label per comparison and discard annotator identity, so within-annotator consistency and between-group structure cannot be recovered from the released data.",
+            "<b>Reward modeling.</b> Even retained provenance is marginalized out by the scalar reward. Over a finite response set, with infinitely many uniformly sampled comparisons, an unconstrained model class, and <i>L</i><sub>2</sub>-regularized Bradley–Terry fitting, the learned reward is ordinally equivalent to a Borda count: it ranks a response by how often it defeats a uniformly drawn alternative once hidden context is marginalized out, not by expected utility (Siththaranjan et al., 2024). Relatedly, a reward model can represent a population’s collective preference only if that preference has no Condorcet cycle, while cycles become almost certain as the response set grows (Liu et al., 2026).",
+            "<b>The constitution.</b> Constitutional AI samples principles from an authored list, and even a publicly elicited list passes through a selection rule. Collective Constitutional AI gathered 1,127 statements and 38,252 votes from a representative sample of 1,002 United States adults and kept only the statements that ranked highest under group-aware consensus, an effective threshold of 0.723 (Huang et al., 2024). Group-aware consensus is designed to guard against majoritarianism, yet it makes the filter tighter, not looser: a statement that one cluster holds as central and another rejects scores low by construction, so the statements that mark irreducible value conflict are exactly the ones removed."
+          ]
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "Every rule that scores principles by cross-group agreement is a conflict-minimizing projection: a virtue when fixing a shared constitutional minimum, and a defect when applied to the whole of value. Consensus machinery improves the quality of the collapse without averting it."
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "title": "Two Results on Preference Collapse",
+      "blocks": [
+        {
+          "type": "subtitle",
+          "text": "Proposition 1: Two Worlds, One Dataset"
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "Fix a prompt <i>x</i> and an ordered pair of candidate responses (<i>y</i><sub>1</sub>, <i>y</i><sub>2</sub>). Each elicitation draws an annotator type independently from the pool and records whether the annotator reports <i>y</i><sub>1</sub> ≻ <i>y</i><sub>2</sub>; annotator identity is not retained, and no annotator labels the same item twice. Let <i>q</i> be the probability of this label, let <i>σ</i> be the logistic function, and let the Bradley–Terry model assert Pr(<i>y</i><sub>1</sub> ≻ <i>y</i><sub>2</sub>) = <i>σ</i>(<i>θ</i>), where <i>θ</i> = <i>r</i>(<i>y</i><sub>1</sub>) − <i>r</i>(<i>y</i><sub>2</sub>)."
+        },
+        {
+          "type": "html",
+          "align": "justify",
+          "body": "<blockquote><b>Proposition 1.</b> <i>Fix <i>q</i> ∈ (0, 1) and consider two population structures. In the <span style='font-style:normal'>divided</span> structure, a fraction <i>q</i> of annotators prefer <i>y</i><sub>1</sub> with certainty and the remaining 1 − <i>q</i> prefer <i>y</i><sub>2</sub> with certainty. In the <span style='font-style:normal'>ambivalent</span> structure, every annotator is internally undecided and reports <i>y</i><sub>1</sub> with probability <i>q</i>. Then, for every <i>n</i>, the <i>n</i> elicited labels are independent Bernoulli(<i>q</i>) under both structures, so the two structures induce the same distribution over observations and no test distinguishes them with power exceeding its size. For an observed win count <i>w</i> with 0 &lt; <i>w</i> &lt; <i>n</i>, the Bradley–Terry maximum-likelihood estimate is the unique solution of <i>σ</i>(<span style='position:relative;display:inline-block'><i>θ</i><span style='position:absolute;left:0.1em;top:-0.2em;font-style:normal'>ˆ</span></span>) = <i>w</i>/<i>n</i>, which converges almost surely to logit(<i>q</i>) under both structures, and hence to zero when <i>q</i> = 1/2.</i></blockquote>"
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "The proposition is elementary; its implications for alignment are not. A dataset in which half the world regards a response as obligatory and the other half as forbidden is indistinguishable, from the labels alone, from one in which nobody has a preference at all. Whereas the Borda characterization shows what the learned reward becomes once hidden context is marginalized out, Proposition 1 shows that no estimator could do better: the distinction is unidentifiable in the data, not merely lost in the fit."
+        },
+        {
+          "type": "html",
+          "align": "justify",
+          "body": "<blockquote><b>Corollary 1.</b> <i>Suppose the reward attains the per-pair Bradley–Terry optimum, so r(<i>y</i><sub>1</sub>) − r(<i>y</i><sub>2</sub>) = logit(q). Under the KL-regularized RLHF objective with coefficient β, the optimal policy satisfies</i><p style='text-align:center;margin:1rem 0'><span style='display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .15em'><span style='border-bottom:1px solid currentColor;padding:0 .25em'><i>π</i><sup>⋆</sup>(<i>y</i><sub>1</sub> | <i>x</i>)</span><span style='padding:0 .25em'><i>π</i><sup>⋆</sup>(<i>y</i><sub>2</sub> | <i>x</i>)</span></span> = <span style='display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .15em'><span style='border-bottom:1px solid currentColor;padding:0 .25em'><i>π</i><sub>ref</sub>(<i>y</i><sub>1</sub> | <i>x</i>)</span><span style='padding:0 .25em'><i>π</i><sub>ref</sub>(<i>y</i><sub>2</sub> | <i>x</i>)</span></span> · <span style='font-size:1.8em;vertical-align:middle;font-weight:300'>(</span><span style='display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .15em'><span style='border-bottom:1px solid currentColor;padding:0 .25em'><i>q</i></span><span style='padding:0 .25em'>1 − <i>q</i></span></span><span style='font-size:1.8em;vertical-align:middle;font-weight:300'>)</span><sup>1/<i>β</i></sup></p><i>so the only trace that the population structure leaves in the deployed model is the scalar q. Under best-of-n reranking by r, the selection between <i>y</i><sub>1</sub> and <i>y</i><sub>2</sub> depends only on sign(q − 1/2).</i></blockquote>"
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "A 99:1 consensus and a 51:49 split therefore induce the same reranked choice: the 49% receive an answer their tradition rejects with no acknowledgment that anything was contested, and a small community loses every contested comparison whatever the stakes, because <i>q</i> registers headcount rather than intensity. This formalizes the objection that alignment settles value conflict by majority vote, the <i>preference collapse</i> that Xiao et al. (2025) identify as an algorithmic bias of RLHF."
+        },
+        {
+          "type": "subtitle",
+          "text": "Proposition 2: What a Scalar Reward Throws Away"
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "The repair is not a better aggregation rule but a wider representation. Let Θ = {ok, <span style='text-decoration:overline'>ok</span>} record whether a response is acceptable at a prompt for a given evaluator. An open-world mass function <i>m</i> in the transferable belief model distributes unit mass over the subsets of Θ, where <i>m</i>(∅) may be positive and quantifies contradiction among the combined sources. Write <i>κ</i> = <i>m</i>(∅) for <b>conflict</b>, <i>τ</i> = <i>m</i>({ok}) for <b>support</b>, <i>φ</i> = <i>m</i>({<span style='text-decoration:overline'>ok</span>}) for <b>opposition</b>, and <i>υ</i> = <i>m</i>(Θ) for <b>ignorance</b>."
+        },
+        {
+          "type": "html",
+          "align": "justify",
+          "body": "<blockquote><b>Proposition 2.</b> <i>The set of open-world mass functions on Θ is affinely isomorphic to the standard three-simplex, with the four categorical assignments as vertices. Reading a focal set as the hypotheses it leaves open and a Belnap value as the truth values it supports, the order-reversing correspondence {ok} ↦ <b>T</b>, {<span style='text-decoration:overline'>ok</span>} ↦ <b>F</b>, Θ ↦ <b>N</b>, ∅ ↦ <b>B</b> maps the vertices onto the four values of Belnap–Dunn logic: at Θ, nothing is settled, so neither value is supported; at ∅, nothing is left open, so both values are supported, yielding a glut. Let Π(<i>m</i>) = (<i>τ</i> + <i>υ</i>/2)/(1 − <i>κ</i>), defined for <i>κ</i> &lt; 1, be the canonical scalarization, which discards conflict by Dempster normalization and splits residual ignorance by the pignistic transform. Then Π maps onto [0, 1], and for every <i>p</i> ∈ (0, 1) the fiber Π<sup>−1</sup>(<i>p</i>) is two-dimensional.</i></blockquote>"
+        },
+        {
+          "type": "figure",
+          "image": "static/images/simplex.png",
+          "alt": "The three-simplex of open-world mass functions, with vertices T, F, N and B, mapped by the scalarization Pi onto the acceptability scale from 0 to 1",
+          "width": "72%",
+          "caption": "<b>What a scalar reward throws away.</b> Open-world mass functions form a three-simplex whose vertices are the four Belnap–Dunn values. The scalarization Π, defined for <i>κ</i> &lt; 1, maps the simplex onto the acceptability scale [0, 1]. Every fiber Π<sup>−1</sup>(<i>p</i>) with 0 &lt; <i>p</i> &lt; 1 is two-dimensional, so two of the three degrees of freedom are lost, and a reward of the form <i>r</i> = logit ∘ Π inherits exactly these fibers."
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "The loss is not specific to Π: informally, no scalar can encode three degrees of freedom, so any scalar summary of the simplex discards at least two, and the only design decision is which two. If the reward is a monotone function of per-response acceptability, <i>r</i> = logit ∘ Π wherever Π ∈ (0, 1), then the pipeline’s evaluation map discards conflict entirely and splits ignorance evenly. Zadeh’s classical objection to normalization, transposed to a binary frame, shows how costly this choice is."
+        },
+        {
+          "type": "table",
+          "caption": "<b>Normalization in action.</b> Two communities with nearly categorical and opposed views, <i>m</i><sub>1</sub>({ok}) = 0.99, <i>m</i><sub>1</sub>(Θ) = 0.01 and <i>m</i><sub>2</sub>({<span style='text-decoration:overline'>ok</span>}) = 0.99, <i>m</i><sub>2</sub>(Θ) = 0.01, are combined conjunctively. The unnormalized combination places almost all mass on ∅; Dempster’s rule normalizes by dividing by 1 − 0.9801 = 0.0199 and returns a near-total contradiction as near-perfect indifference.",
+          "columns": [
+            {
+              "header": "Focal set",
+              "align": "left"
+            },
+            {
+              "header": "Unnormalized"
+            },
+            {
+              "header": "Normalized"
+            }
+          ],
+          "rows": [
+            {
+              "cells": [
+                "∅ &nbsp;(conflict, <i>κ</i>)",
+                "0.9801",
+                "discarded"
+              ]
+            },
+            {
+              "cells": [
+                "{ok} &nbsp;(support, <i>τ</i>)",
+                "0.0099",
+                "0.4975"
+              ]
+            },
+            {
+              "cells": [
+                "{<span style='text-decoration:overline'>ok</span>} &nbsp;(opposition, <i>φ</i>)",
+                "0.0099",
+                "0.4975"
+              ]
+            },
+            {
+              "cells": [
+                "Θ &nbsp;(ignorance, <i>υ</i>)",
+                "0.0001",
+                "0.005"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "This is the collapse of Proposition 1 effected by a different operator."
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "Most other formalisms share these four corners: Belnap–Dunn logic is paraconsistent and paracomplete, and neutrosophic sets carry independent truth, indeterminacy, and falsity components. Credal sets are an instructive exception: on a binary frame they can represent ignorance but have no state for a glut. Imprecise probability alone buys epistemic humility without the ability to hold a contradiction, which is why our proposal is paraconsistent."
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "title": "Why the Global South Bears the Cost",
+      "blocks": [
+        {
+          "type": "subtitle",
+          "text": "Representation versus Representability"
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "Two failures must be kept apart. A <b>representation</b> failure occurs when a community is absent from or sparsely represented in the training data; a <b>representability</b> failure occurs when the model class has no state that can encode what the community holds. Proposition 1 shows that the standard protocol cannot identify contestation regardless of who is sampled, and Proposition 2 shows that even under ideal elicitation a scalar reward has nowhere to store the answer; a perfectly stratified global annotator pool changes the scalar <i>q</i> and nothing else. Fixing representation while leaving representability untouched yields a system that consults the whole world and still returns exactly one answer: a stronger claim to universal legitimacy on the same exclusionary architecture."
+        },
+        {
+          "type": "subtitle",
+          "text": "An Illustrative Case of Genuine Conflict"
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "Te Hiku Media, an iwi media organization in Te Hiku o Te Ika, Aotearoa New Zealand, curates a corpus of te reo Māori speech from its communities and does not make it openly available; access is granted case by case under tikanga Māori, and its Kaitiakitanga License asserts guardianship rather than ownership (Jones et al., 2025). Under open-data norms, a recording of a public broadcast is a resource whose openness is a good; under kaitiakitanga and the CARE principles for Indigenous data governance, the same recording is a <i>taonga</i> (treasure) whose circulation is a matter of collective authority (Carroll et al., 2020)."
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "Presented to a globally stratified pool, the prompt <i>may this corpus be used to train a commercial speech model</i> would receive a label frequency near one, because the population holding the restrictive norm is tiny relative to any global pool. By Corollary 1, the deployed system answers yes with confidence, with no trace of the contestation or of the contesting party, and with no mechanism by which that party could be recognized as decisive over its own data. The failure is not that the model is uninformed; its evaluation space has no state corresponding to <i>permitted under one regime and prohibited under another</i>, which is exactly <b>B</b>."
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "The conflict is a glut, not a gap: both parties are well informed and their views are internally well supported. The norms are also asymmetric in population but not in normative weight, which headcount aggregation cannot express. The case illustrates the kind of conflict the architecture is meant to represent; the architecture itself has not been tested on it."
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "title": "Safety Consequences",
+      "blocks": [
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "The erasure is a safety problem as well as an ethical one. The numbers below come from studies of existing scalar-reward systems; they illustrate the failure modes and do not test the proposed architecture."
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "align": "left",
+          "items": [
+            "<b>One threshold cannot serve all communities.</b> Because the model holds a single acceptability scalar, refusal is governed by one implicit threshold, which produces over-refusal and under-refusal at once across populations. A widely used aligned model fully refuses 38% of 250 clearly benign prompts under its shipped system prompt and 14% without it (Röttger et al., 2024), and raising safety data to approximately 10% of the instruction mix causes exaggerated-safety refusals on more than 50% of a safe-prompt suite (Bianchi et al., 2024). A four-valued policy does not remove this tradeoff but reshapes it, routing contested and unknown cases to distinct behaviors rather than to one side of a single threshold.",
+            "<b>Pluralism is an attack surface without a floor.</b> Any architecture that grants different permissions to different communities invites a <i>community-claim jailbreak</i>, in which the adversary asserts an identity or normative frame under which a universally prohibited action would be permitted. The analogous multilingual attack already succeeds: translating harmful prompts into low-resource languages raises GPT-4’s bypass rate from 0.96% in English to 79.04% (Yong et al., 2023), and deliberate multilingual attacks reach 80.92% unsafe responses from ChatGPT (Deng et al., 2024). Letting a claimed frame override the evaluation would give this attack a supported interface; the design response is a safety floor closed under community claims."
+          ]
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "title": "A Four-Valued Architecture",
+      "blocks": [
+        {
+          "type": "subtitle",
+          "text": "Four Coordinates, Four Regimes"
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "Let 𝒞 partition the relevant population into communities, including a residual element for unmodeled communities, and let each community <i>c</i> ∈ 𝒞 carry an evaluation <i>m<sub>c</sub></i>(<i>x</i>, <i>y</i>) in the simplex. Two aggregations answer two questions. The <b>mixture</b> <i>m̄</i> = Σ<sub><i>c</i></sub> <i>w<sub>c</sub> m<sub>c</sub></i>, with demographic weights <i>w<sub>c</sub></i>, describes how the population is distributed; its ignorance coordinate absorbs the residual community’s vacuous evaluation, so the architecture can operate without enumerating the world’s traditions in advance. The unnormalized <b>conjunctive</b> combination describes what communities can jointly assert; for evaluations with no internal conflict, the pairwise conflict is <i>κ</i>(<i>m</i>, <i>m′</i>) = <i>m</i>({ok}) <i>m′</i>({<span style='text-decoration:overline'>ok</span>}) + <i>m</i>({<span style='text-decoration:overline'>ok</span>}) <i>m′</i>({ok}). Retaining both aggregations and normalizing neither is the representational core of the proposal."
+        },
+        {
+          "type": "figure",
+          "image": "static/images/four_states.png",
+          "alt": "Four response states arranged by support for ok and support for not-ok: N (gap), T (yes), F (no), and B (glut)",
+          "width": "50%",
+          "caption": "<b>Four states, not two.</b> An open-world mass function over Θ = {ok, <span style='text-decoration:overline'>ok</span>} keeps four numbers: support (<b>T</b>), opposition (<b>F</b>), ignorance as a gap (<b>N</b>), and conflict as a glut (<b>B</b>). Current pipelines have states for <b>T</b> and <b>F</b> only."
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "Regime <b>B</b> is triggered when the largest pairwise conflict exceeds a published, audited threshold <i>κ</i><sup>⋆</sup>; otherwise, the regime follows the dominant coordinate of <i>m̄</i>. The pairwise maximum is used rather than a running combination because conjunctive conflict accumulates monotonically as communities are added and would saturate. The four Belnap corners thus become four states of a deployed system, calling for four behaviors rather than the two available today."
+        },
+        {
+          "type": "table",
+          "caption": "<b>From states to behaviors.</b> Response regimes under a four-valued evaluation; the <b>B</b> row is triggered by the pairwise conflict statistic defined in the text. Current alignment pipelines collapse the last two rows into the first two.",
+          "columns": [
+            {
+              "header": "Trigger",
+              "align": "left"
+            },
+            {
+              "header": "Value"
+            },
+            {
+              "header": "System behavior"
+            }
+          ],
+          "rows": [
+            {
+              "cells": [
+                "<i>τ</i> (support)",
+                "<b>T</b>",
+                "<div style='text-align:left;white-space:normal'>Answer clearly.</div>"
+              ]
+            },
+            {
+              "cells": [
+                "<i>φ</i> (opposition)",
+                "<b>F</b>",
+                "<div style='text-align:left;white-space:normal'>Decline, and state the grounds for refusal.</div>"
+              ]
+            },
+            {
+              "cells": [
+                "<i>υ</i> (ignorance)",
+                "<b>N</b>",
+                "<div style='text-align:left;white-space:normal'>Ask clarifying questions, hedge, and report calibrated uncertainty.</div>"
+              ]
+            },
+            {
+              "cells": [
+                "<i>κ</i> (conflict)",
+                "<b>B</b>",
+                "<div style='text-align:left;white-space:normal'>Name the disagreement and its parties; return an admissible set of perspectives; defer to the decisive governing body.</div>"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "The <b>N</b> regime already has technical machinery, since calibrated abstention signals such as semantic entropy are available. The <b>B</b> regime is absent from current pipelines, and it is not abstention: refusing to answer a contested question is itself a resolution in favor of whichever party benefits from silence."
+        },
+        {
+          "type": "subtitle",
+          "text": "Outputting Admissible Sets Rather Than Argmax"
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "At decision time, the honest object is a set, not a maximizer. Under Levi’s E-admissibility, a response is admissible if and only if it maximizes expected acceptability under at least one distribution in the credal set induced by the community evaluations; the rule is set-valued by construction and refuses to manufacture an ordering the data do not justify. Walley’s maximality and Γ-maximin are alternatives, and the choice among these criteria is a policy decision about risk tolerance that should be published rather than hidden as a decoding parameter."
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "A veto rule sits above whichever criterion is chosen. The <b>pluriversal admissible set</b> contains the responses that no recognized community categorically rejects. If it is large, the system may optimize within it for helpfulness; if it is a singleton, the contested question has a uniquely determinate safe answer, which the system gives in regime <b>B</b> while naming the disagreement; if it is empty, the correct behavior is escalation, not aggregation."
+        },
+        {
+          "type": "subtitle",
+          "text": "The Safety Floor, Maintained Classically"
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "Paraconsistency about cultural values must not become permissiveness about harm. We therefore require a core ℱ of prohibited actions, held in the classical fragment outside the four-valued layer. Following Rawls’s overlapping consensus, ℱ is the set of prohibitions that every reasonable comprehensive doctrine endorses for its own reasons; uplift toward mass-casualty weapons, sexual content involving minors, and targeted incitement to violence are baseline members. If a recognized community rejects a prohibition in ℱ, the prohibition stands. Three properties preserve safety."
+        },
+        {
+          "type": "list",
+          "ordered": true,
+          "align": "left",
+          "items": [
+            "ℱ is <b>closed under community claims</b>: no assertion of identity, tradition, jurisdiction, or authorization in the prompt moves an action out of ℱ.",
+            "Community attribution is <b>verified through an authenticated governance channel</b>, never inferred from prompt text.",
+            "The four-valued layer may <b>restrict but not expand</b> the allowable action set relative to the classical baseline, so the worst case of a corrupted community evaluation is over-refusal, never a new capability."
+          ]
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "The community-claim jailbreak is thus blocked on ℱ by construction; what remains attackable is the contested region, where a successful attack surfaces a disagreement inappropriately rather than causing harm. ℱ is a residual universalism, and we do not claim that it is neutral. It is justified because it is smaller, more transparent, and more auditable than the status quo. Its boundary is political and must be governed by the process that defines the community partition, with changes logged, reviewable, and subject to institutional override."
+        },
+        {
+          "type": "subtitle",
+          "text": "Algorithmic Requirements"
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "No new optimizer is required, but the pipeline requires three changes."
+        },
+        {
+          "type": "list",
+          "ordered": true,
+          "align": "left",
+          "items": [
+            "<b>Elicitation</b> must preserve annotator provenance and allow <i>both</i> and <i>neither</i> to be expressed separately; by Proposition 1, the conflict coordinate cannot be recovered afterwards from provenance-free labels.",
+            "The <b>reward head</b> must become vector-valued or distributional. Distributional preference learning shows that dispersion due to hidden context is estimable from existing pairwise data, though dispersion alone does not separate conflict from ignorance (Siththaranjan et al., 2024), and mixture-of-reward approaches show that a policy can be optimized against several reward components at once (Chakraborty et al., 2024).",
+            "The <b>decision rule</b> must move from argmax to set selection."
+          ]
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "Each component exists. What is missing is a system that keeps all four coordinates from elicitation through decoding; this is the research program we propose."
+        },
+        {
+          "type": "callout",
+          "body": "<b>Two open limits.</b> The threshold <i>κ</i><sup>⋆</sup> is a free parameter that needs a principled derivation, much as significance thresholds do. The pairwise-max rule is also not invariant to the granularity of the partition: splitting an internally divided community into its two halves leaves every individual judgment unchanged yet can trigger <b>B</b>. If each community’s evaluation is the weighted average of its members’, the mixture <i>m̄</i> is invariant under such refinement, so only the conflict trigger is unstable. The trigger is therefore a specification of the required behavior rather than a fully implementable rule, and a partition-invariant conflict statistic is the main open technical problem of the proposal."
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "title": "Governance: Decisiveness and Jurisdiction",
+      "blocks": [
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "The formalism does not answer the political questions; it converts a question that an estimator now answers implicitly into one that an accountable institution must answer explicitly. The demand for a single, complete, global policy is itself the source of the impossibility, as Sen’s theorem on the Paretian liberal makes precise."
+        },
+        {
+          "type": "html",
+          "align": "justify",
+          "body": "<blockquote><b>Proposition 3 (Sen’s theorem, restated).</b> <i>Let 𝒞 contain at least two communities and <i>Y</i> at least three candidate responses to a prompt. A policy maps each profile of community preference orders over <i>Y</i> to an acyclic social relation, from which choice sets are generated. The policy respects unanimity if the social relation ranks <i>y</i> above <i>y′</i> whenever every community strictly does, and is minimally decisive if at least two communities are each decisive over at least one pair of responses (that community’s strict preference determines the social relation on the pair). Then on the unrestricted domain of profiles, no policy is both unanimity-respecting and minimally decisive.</i></blockquote>"
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "Communities replace Sen’s individuals and responses replace his social states; the content of the theorem is Sen’s, and it serves here as a diagnostic analogy. Under the assumptions of the Borda characterization above, the scalar-reward pipeline admits every profile and respects unanimity, so it cannot be minimally decisive, consistent with the fact that headcount aggregation makes no minority community decisive over anything. The three escapes from the theorem’s premises are three design axes."
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "align": "left",
+          "items": [
+            "<b>Restrict the domain</b> by refusing profiles in which a community demands a violation of the safety floor, which is the role of ℱ.",
+            "<b>Replace the single global policy</b> by context-indexed policies with guaranteed local decisiveness (subsidiarity).",
+            "<b>Drop choice generated by a single social relation</b> and return an admissible set (E-admissibility)."
+          ]
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "The institutional layer partly exists but lacks a technical interface to the model. The UNESCO Recommendation on the Ethics of Artificial Intelligence, adopted by 193 member states in November 2021, and the African Union’s Continental Artificial Intelligence Strategy, endorsed in July 2024, assert authority over how AI systems handle local values, and Indigenous data governance frameworks assert it more concretely, yet none provides a mechanism for attaching that authority to a model. A four-valued evaluation provides one: a recognized governance body can be made decisive over <i>m<sub>c</sub></i> for its own community within a specified prompt class, as an auditable and revocable technical object in a polycentric arrangement, with the safety floor as the constitutional constraint that no local rule may override."
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "Three cautions apply. Communities are not monolithic; the formalism must not be used to enforce internal homogenization, and need not be, since a community’s own evaluation may carry conflict mass and resolve to <b>B</b>. Whoever controls the partition holds real power; making this power explicit exposes it but does not dissolve it. An interface usable only by well-capitalized Western institutions would reproduce the erasure in a new form."
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "title": "Conflict-Preserving Evaluation Metrics",
+      "blocks": [
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "Existing cross-cultural evaluations preserve regional and community provenance, yet none scores whether an item is contested, and the knowledge benchmarks among them score outputs against a single correct key per item, reintroducing at evaluation time the monological assumption the architecture drops. We propose four axes that current suites do not measure."
+        },
+        {
+          "type": "list",
+          "ordered": true,
+          "align": "left",
+          "items": [
+            "<b>Contestation detection.</b> Does the system recognize an item as one on which well-informed communities differ, scored against provenance-preserving annotation rather than a majority key?",
+            "<b>Gap–glut discrimination.</b> Does it separate <i>people disagree about this</i> from <i>nobody has data on this</i>, a distinction that no current reward model represents?",
+            "<b>Floor integrity.</b> Does the prohibited set stay invariant under adversarial community-claim jailbreaks?",
+            "<b>Four-way calibration.</b> Do the reported coordinates (<i>κ</i>, <i>τ</i>, <i>φ</i>, <i>υ</i>) match the empirical distribution of community judgments, generalizing the calibration now applied to <i>υ</i> alone?"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "title": "Limitations, Objections, and Falsifiability",
+      "blocks": [
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "The most serious objection is that a paraconsistent value layer is moral relativism in better notation. Our main reply is the floor: the classical core is non-negotiable, closed under community claims, and can only be enlarged by the four-valued layer, never reduced. A system that reports that communities differ about an action prohibited everywhere has misclassified the item, which floor-integrity metrics are designed to catch."
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "The second objection is cost: four coordinates per community per item are more expensive than one bit, and the number of communities is unbounded. The ignorance coordinate addresses the latter: unmodeled communities contribute to <i>υ</i>, so the partition can stay coarse and be revised incrementally without making the representation unsound. The cost of elicitation is real; our position is that a developer that cannot afford to know whether its global users disagree should not describe its system as aligned with them."
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "Proposition 1 assumes that no annotator labels a pair more than once; repeated within-annotator elicitation breaks the indistinguishability, so the result describes what current datasets support, not what is knowable in principle. The architecture has not yet been implemented, and the framework states in advance what would confirm or refute it."
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "align": "left",
+          "items": [
+            "<b>Supported</b> if a model with a four-coordinate head and a set-valued decision rule separates contested from unknown items at rates well above a scalar-reward baseline, preserves floor integrity under adversarial community claims at least as well as a classically aligned model of the same capability, and retains helpfulness on uncontested items.",
+            "<b>Refuted</b> if the additional coordinates prove unidentifiable in practice, if surfacing contestation degrades safety on the floor, or if the four regimes collapse into two because human evaluators cannot reliably distinguish gaps from gluts."
+          ]
+        },
+        {
+          "type": "text",
+          "align": "justify",
+          "body": "The next step is a pilot study of estimability on a small set of contested and unknown items."
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "title": "Conclusion",
+      "align": "justify",
+      "body": "The question <i>aligning with whom</i> is today answered by an estimator that cannot represent the fact that the question was asked. We have argued that this is a representability failure, not only a sampling failure: under the Bradley–Terry likelihood, deep disagreement and shared ambivalence generate identical data, the evaluation space required to separate them has two more dimensions than a scalar reward, and consensus-seeking elicitation tightens the filter rather than loosening it. The alternative keeps four numbers rather than one, returns admissible sets rather than maximizers, holds a classical safety floor that no community claim can move, and gives governance a technical interface. It does not make value conflict disappear; it makes conflict something a deployed system can be honest about, which is the least an aligned system owes the people it was not built by."
+    },
+    {
+      "type": "pdf",
+      "title": "Slides",
+      "file": "When_Alignment_Erases_Disagreement_AizierjiangAiersilan_slides4AAAI2026FSS.pdf",
+      "label": "Slide"
+    }
+  ],
+  "poster": {
+    "enabled": false,
+    "title": "Poster",
+    "file": "paper_poster.pdf"
+  },
+  "bibtex": {
+    "title": "BibTeX",
+    "entry": "@inproceedings{aiersilan2026alignment,\n  title={When Alignment Erases Disagreement: Preference Collapse\n         and a Four-Valued Alternative for {LLMs}},\n  author={Aiersilan, Aizierjiang},\n  booktitle={AAAI 2026 Fall Symposium Series},\n  year={2026}\n}"
+  },
+  "footer": {
+    "showLinks": false,
+    "text": "© 2026 Aizierjiang Aiersilan."
+  }
+}

@@ -1,0 +1,14 @@
+index-template.html
+
+.vscode
+.idea
+.env
+.cache
+/cache/
+.DS_store
+temp
+.temp
+temp/
+
+# Private source material (paper LaTeX, code, slide sources); never publish
+__reference_materials/
